@@ -1,4 +1,14 @@
 lenguage: node_js
+if: branch = master # condition para el build
+
+stages:
+  - name: lint
+    if: branch = development # condicion para el stage
+
+jobs:
+  include:
+    - if: branch = staging # condicion solo para el job
+      script: npm run some-command
 cache:
   directories:
     - node_modules
@@ -9,6 +19,18 @@ git:
   depth: 3
 script:
   - yarn build
+notifications:
+  slack:
+    rooms:
+      - <account>:<token>#development
+      - <account>:<token>#general
+  email:
+    reciepients:
+    - xtremoc.log@gmail.com
+   # - oscar@arepa.dev
+    on_success: always
+    on_failure: always
+# manda emails a esos mails cuando es exitoso y cuando falla
 deploy:
   provider: pages
   skip_cleanup: true
